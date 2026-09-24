@@ -1,10 +1,11 @@
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy import UniqueConstraint
 from sqlalchemy.orm import relationship
-from app.db.base import Base
+from app.db.base_class import Base
 
 class Subject(Base):
     __tablename__ = "subjects"
+    
     __tableargs__ = (
         UniqueConstraint(
             "user_id", "name", name="uq_user_subject_name"

@@ -2,7 +2,7 @@ from sqlalchemy import Column, String, Integer, ForeignKey, Boolean, DateTime
 from sqlalchemy import Enum as SQLEnum
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
-from app.db.base import Base
+from app.db.base_class import Base
 import enum
 
 class SessionVisibility(str, enum.Enum):
@@ -42,14 +42,20 @@ class Session(Base):
     )
 
     visibility = Column(
-        SQLEnum(SessionVisibility),
+        SQLEnum(
+            SessionVisibility, 
+            values_callable=lambda x: [e.value for e in x]
+        ),
         default=SessionVisibility.EVERYONE,
         server_default=SessionVisibility.EVERYONE.value,
         nullable=False
     )
 
     session_type = Column(
-        SQLEnum(SessionType),
+        SQLEnum(
+            SessionType, 
+            values_callable=lambda x: [e.value for e in x]
+        ),
         default=SessionType.SOLO,
         server_default=SessionType.SOLO.value,
         nullable=False
