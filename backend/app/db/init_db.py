@@ -1,10 +1,16 @@
 from app.db.session import engine
 from app.db.base import Base 
 
-def init_db() -> None:
-    print("Connecting to PostgreSQL...")
+def reset_db() -> None:
+    print("Dropping old tables...")
+    Base.metadata.drop_all(bind=engine)
+
+    print("Creating tables with the new structure (TimestampMixin)...")
     Base.metadata.create_all(bind=engine)
-    print("Database tables verified and created successfully!")
+
+    print("Database reset successfully.")
+
 
 if __name__ == "__main__":
-    init_db()
+    reset_db()
+
