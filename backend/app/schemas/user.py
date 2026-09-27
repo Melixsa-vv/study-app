@@ -1,22 +1,20 @@
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator, AfterValidator
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, AfterValidator
 import re
 from typing import Annotated
 
 class UserBase(BaseModel):
     email: EmailStr
     user_name: str = Field(
-        ...,
         min_length=3,
         max_length=50,
         description="Unique user's name"
     )
 
     name: str = Field(
-        ...,
         min_length=3,
         max_length=50,
-        description="Public alias, not necesarily unique"
+        description="Public alias, not necessarily unique"
     )
 
 
@@ -59,16 +57,26 @@ class UserRead(UserBase):
 class UserUpdate(BaseModel):
     email: EmailStr | None = None
     user_name: str | None = Field(
-        None,
+        default=None,
         min_length=3,
         max_length=50
     )
     name: str | None = Field(
-        None, 
+        default=None, 
         min_length=3,
         max_length=50
     )
     password: PasswordStr | None = None
 
+class UserInDBBase(UserBase):
+    id: int
+    is_deleted: bool = False
+    created_at: datetime
+    updated_at: datetime | None = None
 
+    model_config = ConfigDict(from_attributes=True)
+
+
+class UserRead(UserInDBBase):
+    pass
     

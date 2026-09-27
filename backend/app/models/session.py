@@ -66,7 +66,10 @@ class Session(Base, TimestampMixin):
         nullable=False
     )
 
-    status = Column(SQLEnum(SessionStatus), default=SessionStatus.IN_PROGRESS, nullable=False)
+    status = Column(
+        SQLEnum(SessionStatus), 
+        default=SessionStatus.IN_PROGRESS, nullable=False
+    
     scheduled_at = Column(DateTime(timezone=True), nullable=True)
 
     # Extraordinary database safety measure for referential integrity (e.g., system purge or tests).
@@ -80,8 +83,6 @@ class Session(Base, TimestampMixin):
     )
     owner = relationship("User", back_populates="sessions")
     subject = relationship("Subject", back_populates="sessions")
-        
-    
     
 
     @property
