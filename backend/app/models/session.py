@@ -69,8 +69,10 @@ class Session(Base, TimestampMixin):
     status = Column(
         SQLEnum(SessionStatus), 
         default=SessionStatus.IN_PROGRESS, nullable=False
+    )
     
     scheduled_at = Column(DateTime(timezone=True), nullable=True)
+
 
     # Extraordinary database safety measure for referential integrity (e.g., system purge or tests).
     # Under normal application workflow, deletion of periods is not permitted 
@@ -93,6 +95,5 @@ class Session(Base, TimestampMixin):
     def completed_at(self) -> DateTime |None:
         if self.status == SessionStatus.COMPLETED and self.periods:
             return self.periods[-1].ended_at
-        return None
 
-   
+        return None 
