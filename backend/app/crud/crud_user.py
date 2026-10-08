@@ -2,12 +2,29 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 from typing import Any
 
+from app.core.security import get_password_hash
 from app.crud.base import CRUDBase
 from app.models.user import User
 from app.schemas.user import UserCreate, UserUpdate
 from sqlalchemy import select, or_
 
 class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
+    def create(self, db: Session, *, obj_in: UserCreate) -> User:
+
+        user_data = obj_in.model_dump(exclude={"password"})
+        
+        hashed_password = get_password_hash(obj_in.password)
+
+        db_obj = User(
+            **user_data,
+            hashed_password=hashed_password
+        )
+        
+        db.add(db_obj)
+        db.commit()
+        db.refresh(db_obj)
+        return db_obj
+    
 
     def get_by_email(self, db: Session, email: str) -> User | None:
         stmt = select(User).where(User.email == email, User.is_deleted.is_(False))
@@ -59,7 +76,7 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
                 User.is_deleted.is_(False),
                 or_(
                     User.user_name.ilike(f"%{query}%"),
-                    User.full_name.ilike(f"%{query}%"),
+                    User.email.ilike(f"%{query}%"),
                 ),
             )
             .offset(skip)

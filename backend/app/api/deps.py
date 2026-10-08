@@ -6,8 +6,8 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from sqlalchemy.orm import Session
 
-from app import crud, models, schemas
-from app.core import security
+from app import models
+from app.crud.crud_user import crud_user
 from app.core.config import settings
 from app.db.session import SessionLocal
 
@@ -45,7 +45,7 @@ def get_current_user(
     except (JWTError, Exception):
         raise credentials_exception
 
-    user = crud.user.get(db, id=int(user_id))
+    user = crud_user.get_by_id(db, user_id=int(user_id))
 
     if not user or user.is_deleted:
         raise HTTPException(

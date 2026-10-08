@@ -21,7 +21,6 @@ class SessionBase(BaseModel):
 class SessionCreate(SessionBase):
     subject_id: int
 
-
 class SessionUpdate(BaseModel):
     title: str | None = Field(default=None, min_length=1, max_length=100)
     visibility: SessionVisibility | None = None

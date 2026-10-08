@@ -9,7 +9,6 @@ from app.models.user import User
 
 class UserService:
     def register_user(self, db: Session, user_in: UserCreate) -> User:
-
         if crud_user.get_by_email(db, email=user_in.email):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
@@ -22,14 +21,9 @@ class UserService:
                     status_code=status.HTTP_400_BAD_REQUEST,
                     detail="This username is already taken.",
                 )
-
-        hashed_password = get_password_hash(user_in.password)
-
-        return crud_user.create(
-            db, obj_in=user_in, hashed_password=hashed_password
-        )
-
-    def get_user_by_id(self, db: Session, user_id: int) -> User:
+        return crud_user.create(db, obj_in=user_in)
+    
+    def get_by_id(self, db: Session, user_id: int) -> User:
         user = crud_user.get_by_id(db, user_id=user_id)
         if not user:
             raise HTTPException(
@@ -72,7 +66,7 @@ class UserService:
 
     def update_user(self, db: Session, user_id: int, user_in: UserUpdate) -> User:
 
-        user = self.get_user_by_id(db, user_id)
+        user = self.get_by_id(db, user_id)
 
         if user_in.email and user_in.email != user.email:
             if self.is_email_taken(db, user_in.email):

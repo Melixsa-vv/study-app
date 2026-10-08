@@ -1,5 +1,6 @@
 from app.db.session import engine
-from app.db.base import Base 
+from app.db.base_class import Base
+import app.db.base
 
 def reset_db() -> None:
     print("Dropping old tables...")

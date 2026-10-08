@@ -46,14 +46,6 @@ PasswordStr = Annotated[
 class UserCreate(UserBase):
     password: PasswordStr
 
-
-class UserRead(UserBase):
-    id: int
-    created_at: datetime
-    is_deleted: bool
-
-    model_config = ConfigDict(from_attributes=True)
-
 class UserUpdate(BaseModel):
     email: EmailStr | None = None
     user_name: str | None = Field(
@@ -66,7 +58,6 @@ class UserUpdate(BaseModel):
         min_length=3,
         max_length=50
     )
-    password: PasswordStr | None = None
 
 class UserInDBBase(UserBase):
     id: int
@@ -79,4 +70,7 @@ class UserInDBBase(UserBase):
 
 class UserRead(UserInDBBase):
     pass
-    
+
+class PasswordUpdate(BaseModel):
+    current_password: str
+    new_password: PasswordStr
