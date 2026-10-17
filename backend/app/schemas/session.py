@@ -1,9 +1,8 @@
 from datetime import datetime
 from pydantic import BaseModel, Field, ConfigDict
 
-from app.models.session import SessionType, SessionVisibility, SessionStatus
-from app.schemas.period import SessionPeriod
-
+from app.models.session import SessionType, SessionVisibility
+from app.schemas.period import SessionPeriodRead
 
 class SessionBase(BaseModel):
     title: str = Field(
@@ -14,26 +13,25 @@ class SessionBase(BaseModel):
     )
     visibility: SessionVisibility = SessionVisibility.EVERYONE
     session_type: SessionType = SessionType.SOLO
-    status: SessionStatus = SessionStatus.IN_PROGRESS
     scheduled_at: datetime | None = None
 
 
 class SessionCreate(SessionBase):
-    subject_id: int
+    ...
+    #subject_id: int
 
 class SessionUpdate(BaseModel):
     title: str | None = Field(default=None, min_length=1, max_length=100)
     visibility: SessionVisibility | None = None
     session_type: SessionType | None = None
-    status: SessionStatus | None = None
     scheduled_at: datetime | None = None
-    subject_id: int | None = None
+    #subject_id: int | None = None
 
 
 class SessionInDBBase(SessionBase):
     id: int
     created_by: int
-    subject_id: int
+    #subject_id: int
 
     started_at: datetime | None = None
     completed_at: datetime | None = None
@@ -49,4 +47,4 @@ class SessionRead(SessionInDBBase):
 
 
 class SessionDetailRead(SessionInDBBase):
-    periods: list[SessionPeriod] = []
+    periods: list[SessionPeriodRead] = []

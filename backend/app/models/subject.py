@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy import UniqueConstraint
 from sqlalchemy.orm import relationship
-from app.db.base_class import Base
+from app.db.base_class import Base, TimestampMixin
 
-class Subject(Base):
+class Subject(Base, TimestampMixin):
     __tablename__ = "subjects"
     
     __tableargs__ = (
@@ -17,12 +17,14 @@ class Subject(Base):
         primary_key=True,
         index=True
     )
-    
+
+    """
     user_id = Column(
         Integer,
         ForeignKey("users.id"),
         nullable=False
     )
+    """
 
     name = Column(
         String(50),
@@ -44,5 +46,7 @@ class Subject(Base):
         server_default="false"
     )
 
+    """
     owner = relationship("User", back_populates="subjects")
     sessions = relationship("Session", back_populates="subject")
+    """

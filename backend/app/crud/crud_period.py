@@ -54,6 +54,13 @@ class CRUDPeriod(CRUDBase[SessionPeriod, SessionPeriodCreate,SessionPeriodUpdate
 
         return list(db.scalars(stmt).all())
 
+    def get_by_id(self, db:Session,*, session_id: int) -> Session:
+        return db.get(Session, session_id)
+
+    
+
+
+
     def get_studies_by_session(self, db:Session,*, session_id: int) -> list[SessionPeriod]:
         stmt = (
             select(SessionPeriod)
@@ -76,4 +83,4 @@ class CRUDPeriod(CRUDBase[SessionPeriod, SessionPeriodCreate,SessionPeriodUpdate
         return db_obj
 
 
-period = CRUDPeriod(SessionPeriod)
+crud_period = CRUDPeriod(SessionPeriod)

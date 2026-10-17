@@ -1,12 +1,26 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session as dbSession
+from typing import Optional
 
 from app.crud.base import CRUDBase
-from app.models.session import Session, SessionStatus
+
+from app.models.session import Session
+from app.models.period import SessionPeriod
+
 from app.schemas.session import SessionCreate, SessionUpdate
 
 
 class CRUDSession(CRUDBase[Session, SessionCreate, SessionUpdate]):
+    def create(
+        self, db: dbSession, *, obj_in: SessionCreate, user_id: int
+    ) -> Session:
+        obj_in_data = obj_in.model_dump()
+        obj_in_data["created_by"] = user_id
+        db_obj = self.model(**obj_in_data)
+        db.add(db_obj)
+        db.commit()
+        db.refresh(db_obj)
+        return db_obj
 
     def get_latest_by_user(self, db: dbSession, *, user_id: int) -> Session | None:
         stmt = (
@@ -16,11 +30,21 @@ class CRUDSession(CRUDBase[Session, SessionCreate, SessionUpdate]):
         )
         return db.scalars(stmt).first()
 
-    def get_in_progress_by_user(self, db: dbSession, *, user_id: int) -> Session | None:
-        stmt = select(Session).where(
-            Session.status == SessionStatus.IN_PROGRESS,
-            Session.created_by == user_id,  # Corregido: de owner a created_by
+    def get_active_by_user(
+        self, db: dbSession, *, user_id: int
+    ) -> Optional[Session]:
+        stmt = (
+            select(Session)
+            .join(Session.periods)
+            .where(
+                Session.created_by == user_id,
+                Session.is_completed_flag.is_(False),
+                Session.is_cancelled_flag.is_(False),
+                SessionPeriod.ended_at.is_(None), 
+            )
+            .order_by(SessionPeriod.started_at.desc())
         )
+
         return db.scalars(stmt).first()
 
     def get_by_id_and_user(
@@ -43,7 +67,15 @@ class CRUDSession(CRUDBase[Session, SessionCreate, SessionUpdate]):
         )
         return list(db.scalars(stmt).all())
 
+
+    def get_by_id(self, db: dbSession, *, session_id: int) -> Session:
+        return db.get(Session, session_id)
+    
+    def hard_remove(self, db: dbSession, *, session: Session) -> None:
+        db.delete(session)
+        db.commit()
+
     def get_stats_by_user(self, db: dbSession, *, user_id: int) -> dict:
         ...
 
-session = CRUDSession(Session)
+crud_session = CRUDSession(Session)

@@ -11,6 +11,9 @@ class User(Base, TimestampMixin):
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
     is_deleted = Column(Boolean, server_default="false", default=False)
-
+    is_admin = Column(Boolean, server_default="false", default=False)
+    
+    """
     subjects = relationship("Subject", back_populates="owner", cascade="all, delete-orphan")
+    """
     sessions = relationship("Session", back_populates="owner")
