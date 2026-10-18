@@ -3,3 +3,7 @@
 *.pyc
 __pycache__/
 db_instructions.txt
+functionality_ideas.txt
+node_modules/
+dist/
+build/

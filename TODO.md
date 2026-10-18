@@ -2,8 +2,8 @@
 
 ## Step 1: Users & Database Verification
 
-- [ ] Connect `UserService` to user endpoints (`/users`)
-- [ ] Test endpoints to verify real CRUD operations in database
+- [x] Connect `UserService` to user endpoints (`/users`)
+- [x] Test endpoints to verify real CRUD operations in database
 
 ## Step 2: Core Services & Endpoints (Basic Features)
 
