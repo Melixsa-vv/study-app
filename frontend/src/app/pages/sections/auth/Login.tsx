@@ -4,18 +4,44 @@ import AuthContainer from "../../../components/AuthContainer";
 import Button from "../../../components/Button";
 import { SIZES } from "../../../constants/sizes";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = (e: React.SyntheticEvent) => {
+  const handleLogin = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    console.log("Registering:", { email, password });
-    localStorage.setItem("is_authenticated", "true");
-    navigate("/", { replace: true });
-  };
 
+    const formData = new URLSearchParams();
+    formData.append("username", email);
+    formData.append("password", password);
+
+    try {
+      // 2. Llamada real a tu endpoint de FastAPI
+      const response = await fetch(`${API_URL}/auth/login/access-token`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Credenciales incorrectas");
+      }
+
+      const data = await response.json();
+
+      localStorage.setItem("access_token", data.access_token);
+      localStorage.setItem("is_authenticated", "true");
+
+      navigate("/", { replace: true });
+    } catch (err) {
+      console.error("Error en el login:", err);
+    }
+  };
   const INPUT_CLASSES =
     "w-full p-3 bg-white border border-slate-200 rounded-xl text-sm outline-none focus:border-pink-400 transition-colors";
   const INPUT_TEXT = "text-xs font-semibold text-slate-600";

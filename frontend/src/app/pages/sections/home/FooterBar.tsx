@@ -1,4 +1,4 @@
-import { Home, BookOpen, PlusCircle, Settings } from "lucide-react";
+import { Home, BookOpen, PlusCircle, Settings, Cpu } from "lucide-react";
 import Button from "../../../components/Button";
 
 export default function FooterBar() {
@@ -25,6 +25,12 @@ export default function FooterBar() {
             icon={<PlusCircle className="w-5 h-5" />}
             aria-label="Create"
           />
+          <Button
+            size={iconButtonSize}
+            icon={<Cpu className="w-5 h-5" />}
+            aria-label="About me"
+          />
+
           <Button
             size={iconButtonSize}
             icon={<Settings className="w-5 h-5" />}
