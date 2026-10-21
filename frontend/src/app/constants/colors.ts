@@ -1,7 +1,7 @@
 
 export const COLORS = {
   buttons: {
-    pink: { bg: "bg-pink-300", hover: "hover:bg-pink-400" },
+    accent: { bg: "bg-pink-300", hover: "hover:bg-pink-400" },
     blue: { bg: "bg-blue-300", hover: "hover:bg-blue-400" },
     amber: { bg: "bg-amber-200", hover: "hover:bg-amber-300" },
     emerald: { bg: "bg-emerald-500", hover: "hover:bg-emerald-600" },
@@ -22,6 +22,10 @@ export const COLORS = {
   accents: {
     primary: "text-pink-500",
     streak: "text-orange-500",
-    highlight: "text-indigo-600",
+    highlight: {bg: "bg-emerald-200" ,text: "text-indigo-600"},
   },
+
+  light_mode:{
+    bg: "bg-white"
+  }
 };

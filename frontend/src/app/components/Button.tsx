@@ -3,7 +3,6 @@ import { COLORS } from "../constants/colors";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: string;
-  text?: string;
   variant?: keyof typeof COLORS.buttons;
   icon?: React.ReactNode;
 }
@@ -11,12 +10,11 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 export default function Button({
   size,
   variant = "blue",
-  text,
   icon,
   children,
   ...props
 }: ButtonProps) {
-  const buttonSize = size || "px-6 py-6 text-base";
+  const buttonSize = size || "w-12 h-12";
   const colors = COLORS.buttons[variant] || COLORS.buttons.blue;
 
   return (
@@ -26,12 +24,13 @@ export default function Button({
         ${colors.hover}
         text-white 
         font-bold 
-        rounded-lg 
+        rounded-xl 
         flex 
         items-center 
         justify-center 
         gap-2 
-        
+        whitespace-nowrap
+        select-none
         transition-all 
         duration-200 
         shadow-sm 
@@ -40,16 +39,8 @@ export default function Button({
       `}
       {...props}
     >
-      {icon && text && (
-        <>
-          <span>{icon}</span>
-          <span>{text}</span>
-        </>
-      )}
-
-      {icon && !text && <span>{icon}</span>}
-
-      {!icon && text && <span>{text}</span>}
+      {icon && <span className="flex items-center justify-center">{icon}</span>}
+      {children && <span>{children}</span>}
     </button>
   );
 }

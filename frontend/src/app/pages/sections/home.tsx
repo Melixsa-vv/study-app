@@ -1,9 +1,9 @@
-import UpperBar from "./sections/home/UpperBar";
-import QuickView from "./sections/home/QuickView";
-import FooterBar from "./sections/home/FooterBar";
-import Feed from "./sections/home/Feed";
+import UpperBar from "./home/UpperBar";
+import QuickView from "./home/QuickView";
+import FooterBar from "./home/FooterBar";
+import Feed from "./home/Feed";
 
-import { feedData } from "../data/FeedData";
+import { feedData } from "../../data/FeedData";
 
 export default function Home() {
   const handleSelectItem = (item: any) => {
