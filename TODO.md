@@ -7,8 +7,8 @@
 
 ## Step 2: Core Services & Endpoints (Basic Features)
 
-- [ ] `SessionService` + CRUD update + Session endpoints
-- [ ] `PeriodService` + CRUD update + Period endpoints
+- [x] `SessionService` + CRUD update + Session endpoints
+- [x] `PeriodService` + CRUD update + Period endpoints
 - [ ] `SubjectService` + CRUD update + Subject endpoints
 
 ## Step 3: Frontend Foundation
