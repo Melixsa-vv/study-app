@@ -7,11 +7,6 @@ import { SIZES } from "../../constants/sizes";
 export default function Welcome() {
   const navigate = useNavigate();
 
-  const handleSuccessfulAuth = () => {
-    localStorage.setItem("is_authenticated", "true");
-    navigate("/", { replace: true });
-  };
-
   return (
     <div
       className={`min-h-screen w-full flex flex-col items-center justify-between p-6 ${COLORS.light_mode.bg}`}
@@ -45,7 +40,7 @@ export default function Welcome() {
             ${SIZES.buttons.sm.h}
             ${SIZES.buttons.md.text}
             text-base`}
-          onClick={handleSuccessfulAuth}
+          onClick={() => navigate("/register")}
         >
           Register
         </Button>
@@ -57,7 +52,7 @@ export default function Welcome() {
             ${SIZES.buttons.sm.h}
             ${SIZES.buttons.md.text}
             text-base`}
-          onClick={handleSuccessfulAuth}
+          onClick={() => navigate("/login")}
         >
           Log In
         </Button>

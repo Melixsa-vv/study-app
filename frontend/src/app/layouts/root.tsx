@@ -7,12 +7,14 @@ export default function Root() {
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem("is_authenticated") === "true";
+    const publicPaths = ["/welcome", "/register", "/login"];
+    const isPublicPath = publicPaths.includes(location.pathname);
 
-    if (!isAuthenticated && location.pathname !== "/welcome") {
+    if (!isAuthenticated && !isPublicPath) {
       navigate("/welcome", { replace: true });
     }
 
-    if (isAuthenticated && location.pathname === "/welcome") {
+    if (isAuthenticated && isPublicPath) {
       navigate("/", { replace: true });
     }
   }, [navigate, location.pathname]);
