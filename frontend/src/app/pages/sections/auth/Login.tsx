@@ -29,7 +29,7 @@ export default function Login() {
       });
 
       if (!response.ok) {
-        throw new Error("Credenciales incorrectas");
+        throw new Error("Wrong Credentials");
       }
 
       const data = await response.json();
@@ -39,7 +39,7 @@ export default function Login() {
 
       navigate("/", { replace: true });
     } catch (err) {
-      console.error("Error en el login:", err);
+      console.error("Login Error:", err);
     }
   };
   const INPUT_CLASSES =

@@ -4,17 +4,62 @@ import AuthContainer from "../../../components/AuthContainer";
 import Button from "../../../components/Button";
 import { SIZES } from "../../../constants/sizes";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export default function Register() {
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [user_name, setUserName] = useState("");
 
-  const handleRegister = (e: React.SyntheticEvent) => {
+  const handleRegister = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    console.log("Registering:", { name, email, password });
-    localStorage.setItem("is_authenticated", "true");
-    navigate("/", { replace: true });
+
+    try {
+      const response = await fetch(`${API_URL}/users/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: name,
+          user_name: user_name,
+          email: email,
+          password: password,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Wrong Credentials");
+      }
+      const loginFormData = new URLSearchParams();
+      loginFormData.append("username", email);
+      loginFormData.append("password", password);
+
+      const loginResponse = await fetch(`${API_URL}/auth/login/access-token`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: loginFormData,
+      });
+
+      if (!loginResponse.ok) {
+        throw new Error("Registration succeeded, but auto-login failed");
+      }
+
+      const loginData = await loginResponse.json();
+
+      localStorage.setItem("access_token", loginData.access_token);
+      localStorage.setItem("is_authenticated", "true");
+
+      console.log("All Good!");
+
+      navigate("/", { replace: true });
+    } catch (err) {
+      console.error("Registration Error: ", err);
+    }
   };
 
   const INPUT_CLASSES =
@@ -35,6 +80,18 @@ export default function Register() {
             placeholder="Your name"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            className={`${INPUT_CLASSES}`}
+          />
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label className={`${INPUT_TEXT}`}>User Name</label>
+          <input
+            type="text"
+            required
+            placeholder="Your user name"
+            value={user_name}
+            onChange={(e) => setUserName(e.target.value)}
             className={`${INPUT_CLASSES}`}
           />
         </div>
